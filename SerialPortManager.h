@@ -14,10 +14,16 @@ struct PortSetting
     Q_PROPERTY(int baudRate MEMBER baudRate)
     Q_PROPERTY(int dataBits MEMBER dataBits)
     Q_PROPERTY(int stopBits MEMBER stopBits)
+    Q_PROPERTY(int parity MEMBER parity)
+    Q_PROPERTY(int flowControl MEMBER flowControl)
+    Q_PROPERTY(bool write MEMBER write)
 public:
     int baudRate;
     int dataBits;
     int stopBits;
+    int parity;
+    int flowControl;
+    bool write;
 };
 
 class SerialPortManager : public QObject
