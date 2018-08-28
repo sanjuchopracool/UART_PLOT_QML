@@ -154,5 +154,11 @@ Item {
 
     Component.onCompleted: {
         SerialPortManager.portsChanged.connect(setLastUsedPort)
+        console.log(directionCombo.model.get(directionCombo.currentIndex).value)
+    }
+
+    Component.onDestruction: {
+        SerialPortManager.portsChanged.connect(setLastUsedPort)
+        console.log(directionCombo.model.get(directionCombo.currentIndex).value)
     }
 }
