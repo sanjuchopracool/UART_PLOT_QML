@@ -4,8 +4,8 @@ import QtQuick.Layouts 1.3
 import com.sanjay.serial 1.0
 
 Item {
-    width: settingLayout.implicitWidth
-    height: settingLayout.implicitHeight
+    implicitWidth: settingLayout.implicitWidth
+    implicitHeight: settingLayout.implicitHeight
 
     GridLayout
     {

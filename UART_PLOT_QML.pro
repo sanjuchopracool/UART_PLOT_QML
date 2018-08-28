@@ -1,4 +1,4 @@
-QT += quick serialport
+QT += quick serialport quickcontrols2
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
