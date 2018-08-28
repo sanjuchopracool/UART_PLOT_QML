@@ -8,6 +8,18 @@
 
 QT_FORWARD_DECLARE_CLASS(QJSEngine)
 
+struct PortSetting
+{
+    Q_GADGET
+    Q_PROPERTY(int baudRate MEMBER baudRate)
+    Q_PROPERTY(int dataBits MEMBER dataBits)
+    Q_PROPERTY(int stopBits MEMBER stopBits)
+public:
+    int baudRate;
+    int dataBits;
+    int stopBits;
+};
+
 class SerialPortManager : public QObject
 {
     Q_OBJECT

@@ -1,0 +1,2 @@
+1. Application was crashing while closing.
+   clean build solved issue
