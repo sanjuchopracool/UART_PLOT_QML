@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    register_serialport_manager_as_singleton();
+    SerialPortManager::register_serialport_types();
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

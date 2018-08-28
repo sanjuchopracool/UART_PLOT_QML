@@ -43,6 +43,8 @@ Item {
 
         ComboBox {
             id: parityCombo
+            Layout.fillWidth: true
+
             textRole: "key"
             model: ListModel {
                 ListElement {
@@ -85,6 +87,8 @@ Item {
 
         ComboBox {
             id: flowControlCombo
+            Layout.fillWidth: true
+
             textRole: "key"
             model: ListModel {
                 ListElement {
@@ -119,6 +123,7 @@ Item {
 
         ComboBox {
             id: directionCombo
+            Layout.fillWidth: true
 
             textRole: "key"
             model: ListModel {
@@ -152,9 +157,31 @@ Item {
             portsCombo.currentIndex = indexFound
     }
 
+    function setCurrentIndexForComboByText(combobox, value) {
+        combobox.currentIndex = combobox.find(value, Qt.MatchExactly)
+    }
+
+    function setCurrentIndexForComboByValue(combobox, value) {
+        var count = combobox.count;
+        var model = combobox.model
+        for(var i =0; i < count; ++i) {
+            if(value === model.get(i).value) {
+                combobox.currentIndex = i
+                break
+            }
+        }
+    }
+
     Component.onCompleted: {
         SerialPortManager.portsChanged.connect(setLastUsedPort)
-        console.log(directionCombo.model.get(directionCombo.currentIndex).value)
+        var portSetting = SerialPortManager.portSetting
+        setCurrentIndexForComboByText(baudRateCombo, portSetting.baudRate)
+        setCurrentIndexForComboByText(dataBitsCombo, portSetting.dataBits)
+        setCurrentIndexForComboByText(stopBitsCombo, portSetting.stopBits)
+
+        setCurrentIndexForComboByValue(parityCombo, portSetting.parity)
+        setCurrentIndexForComboByValue(flowControlCombo, portSetting.flowControl)
+        setCurrentIndexForComboByValue(directionCombo, portSetting.direction)
     }
 
     Component.onDestruction: {

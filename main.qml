@@ -5,13 +5,18 @@ import QtQuick.Window 2.3
 
 Window {
     visible: true
-    title: qsTr("Hello World")
+    Material.theme: Material.Dark
 
     minimumWidth: setting.implicitWidth + 20
     minimumHeight: setting.implicitHeight + 20
-    PortSettingItem {
-        id: setting
+
+    Page
+    {
         anchors.fill: parent
-        anchors.margins: 10
+        PortSettingItem {
+            id: setting
+            anchors.fill: parent
+            anchors.margins: 10
+        }
     }
 }
