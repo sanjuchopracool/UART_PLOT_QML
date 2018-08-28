@@ -1,4 +1,4 @@
 Create a class SerialPortManager with following responsbilities
-    1. provide a list of available serial ports
+    1. provide a list of available serial ports ( partially done)
         (a) If no part is connected, keep searching for new ports every second
         (b) This list should be property so that it can be accessed from qml ( combo box probably)
