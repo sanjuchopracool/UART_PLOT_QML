@@ -1,0 +1,4 @@
+What are the aim of this project for me ?
+
+1. Understanding qml as much as possible
+2. learn best practices
