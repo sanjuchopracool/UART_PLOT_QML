@@ -5,8 +5,43 @@ import com.sanjay.serial 1.0
 
 Item {
     id: mainItem
-    implicitWidth: settingLayout.implicitWidth
+
+    property int extraWidth: 0
+    implicitWidth: settingLayout.implicitWidth + extraWidth
     implicitHeight: settingLayout.implicitHeight + connectButton.implicitHeight + settingLayout.rowSpacing
+
+    Rectangle {
+        anchors.fill: parent
+        anchors.margins: -10
+        border.width: 3
+
+        MouseArea {
+            id: dragArea
+            width: 10
+            height: 10
+
+            cursorShape: Qt.SizeFDiagCursor
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            hoverEnabled: true
+
+
+            drag {
+                target: mainItem
+                axis: Drag.XAxis
+                minimumX: 0
+            }
+
+            onMouseXChanged: {
+                if(drag.active){
+
+                    if( mainItem.extraWidth + mouseX > 0 )
+                        mainItem.extraWidth += mouseX
+                }
+            }
+        }
+    }
+
 
     GridLayout
     {

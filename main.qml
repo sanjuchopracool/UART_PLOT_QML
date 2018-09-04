@@ -1,7 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
- import QtQuick.Layouts 1.3
+import QtQuick.Window 2.3
+import QtQuick.Layouts 1.3
 
 ApplicationWindow {
     visible: true
@@ -22,7 +23,7 @@ ApplicationWindow {
         readOnly: true
     }
 
-    Page {
+    Pane {
         id: portSettingPage
         anchors.top: parent.top
         state: 'hide'
@@ -60,7 +61,6 @@ ApplicationWindow {
         PortSettingItem {
             id: setting
             anchors.fill: parent
-            anchors.margins: 10
         }
     }
 
@@ -85,7 +85,7 @@ ApplicationWindow {
             VerticalButton {
                 id : button1
                 checkable: true
-                text: "Port setting"
+                text: "Port Setting"
 
                 onClicked: {
                     buttonBar.toggle()
