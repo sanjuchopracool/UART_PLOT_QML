@@ -5,6 +5,7 @@ SerialPortManager::SerialPortManager(QObject *parent) : QObject(parent)
 {
     m_refresh_device_timer = new QTimer(this);
     connect(m_refresh_device_timer, SIGNAL(timeout()), this, SLOT(checkPorts()));
+    checkPorts();
     m_refresh_device_timer->start(1000);
 }
 

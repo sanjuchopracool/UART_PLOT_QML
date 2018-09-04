@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import com.sanjay.serial 1.0
 
 Item {
+    id: mainItem
     implicitWidth: settingLayout.implicitWidth
     implicitHeight: settingLayout.implicitHeight + connectButton.implicitHeight + settingLayout.rowSpacing
 
@@ -12,8 +13,6 @@ Item {
         id: settingLayout
         columns: 4
         anchors.fill: parent
-        anchors.bottomMargin: connectButton.implicitHeight + settingLayout.rowSpacing
-
         /////////////////// Ports ///////////////////
         Label {
             text: qsTr("Port")
@@ -141,14 +140,17 @@ Item {
                 }
             }
         }
-    }
 
-    Button {
-        id : connectButton
-        text: qsTr("Connect")
-        anchors.topMargin: settingLayout.rowSpacing
-        anchors.top: settingLayout.bottom
-        anchors.right: settingLayout.right
+        RowLayout {
+            Layout.row: 4
+            Layout.column: 3
+            Button {
+                Layout.fillWidth: true
+                id : connectButton
+                text: qsTr("Connect")
+                anchors.right: parent.right
+            }
+        }
     }
 
     function setLastUsedPort() {
@@ -185,7 +187,5 @@ Item {
     }
 
     Component.onDestruction: {
-        SerialPortManager.portsChanged.connect(setLastUsedPort)
-        console.log(directionCombo.model.get(directionCombo.currentIndex).value)
-    }
+        SerialPortManager.portsChanged.connect(setLastUsedPort)    }
 }

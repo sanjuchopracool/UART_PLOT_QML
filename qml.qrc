@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>PortSettingItem.qml</file>
+        <file>VerticalButton.qml</file>
     </qresource>
 </RCC>
