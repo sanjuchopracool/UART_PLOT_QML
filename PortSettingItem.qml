@@ -182,7 +182,6 @@ Item {
                 Layout.fillWidth: true
                 id : connectButton
                 text: qsTr("Connect")
-                anchors.right: parent.right
             }
         }
     }
