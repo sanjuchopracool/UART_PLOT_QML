@@ -13,7 +13,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: -10
-        border.width: 3
+        border.width: 1
 
         MouseArea {
             id: dragArea
@@ -29,7 +29,6 @@ Item {
             drag {
                 target: mainItem
                 axis: Drag.XAxis
-                minimumX: 0
             }
 
             onMouseXChanged: {
