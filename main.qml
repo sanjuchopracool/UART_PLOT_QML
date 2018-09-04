@@ -21,6 +21,10 @@ ApplicationWindow {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         readOnly: true
+        selectByMouse: true
+        selectByKeyboard: true
+
+        text: "Hello India"
     }
 
     Pane {
