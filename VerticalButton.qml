@@ -7,6 +7,7 @@ Item {
     height: actualButton.implicitWidth
     width: actualButton.implicitHeight
     property alias checkable: actualButton.checkable
+    property alias checked: actualButton.checked
     signal clicked
     Button {
         id : actualButton

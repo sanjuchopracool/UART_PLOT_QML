@@ -3,8 +3,10 @@ import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
 import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
+import Qt.labs.settings 1.0
 
 ApplicationWindow {
+    id: appWindow
     visible: true
     width: 640
     height: 320
@@ -30,7 +32,15 @@ ApplicationWindow {
     Pane {
         id: portSettingPage
         anchors.top: parent.top
-        state: 'hide'
+        readonly property bool hidden: {
+            state === "hide"
+        }
+
+        state: portPageSetting.state
+
+        function toggleState() {
+            portSettingPage.state = portSettingPage.state === "show" ? "hide" : "show";
+        }
 
         states: [
             State {
@@ -66,6 +76,15 @@ ApplicationWindow {
             id: setting
             anchors.fill: parent
         }
+
+        Settings {
+            id: portPageSetting
+            property string state: "show"
+        }
+
+        Component.onDestruction: {
+            portPageSetting.state = portSettingPage.state
+        }
     }
 
     Page {
@@ -76,25 +95,30 @@ ApplicationWindow {
         implicitWidth: columnLayout.implicitWidth
         implicitHeight: columnLayout.implicitHeight
 
-        signal toggle
-
-        onToggle:
-        {
-            portSettingPage.state = portSettingPage.state === 'show' ? 'hide' : 'show'
-        }
-
         ColumnLayout {
             id : columnLayout
 
             VerticalButton {
-                id : button1
+                id : portSettingButton
                 checkable: true
                 text: "Port Setting"
 
                 onClicked: {
-                    buttonBar.toggle()
+                    portSettingPage.toggleState()
                 }
             }
         }
+    }
+
+
+    Settings {
+        property alias x: appWindow.x
+        property alias y: appWindow.y
+        property alias width: appWindow.width
+        property alias height: appWindow.height
+    }
+
+    Component.onCompleted: {
+        portSettingButton.checked = portSettingPage.hidden
     }
 }

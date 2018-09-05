@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import com.sanjay.serial 1.0
+import Qt.labs.settings 1.0
 
 Item {
     id: mainItem
@@ -220,5 +221,10 @@ Item {
     }
 
     Component.onDestruction: {
-        SerialPortManager.portsChanged.connect(setLastUsedPort)    }
+        SerialPortManager.portsChanged.connect(setLastUsedPort)
+    }
+
+    Settings {
+        property alias extraWidth: mainItem.extraWidth
+    }
 }
