@@ -18,7 +18,7 @@ ApplicationWindow {
 
     TextArea {
         id : outputArea
-        anchors.left: buttonBar.right
+        anchors.left: portSettingPage.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -49,7 +49,7 @@ ApplicationWindow {
                 AnchorChanges {
                     target: portSettingPage
                     anchors.left: undefined
-                    anchors.right: buttonBar.left
+                    anchors.right: buttonBar.right
                 }
             },
 
