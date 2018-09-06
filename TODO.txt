@@ -5,3 +5,5 @@ Create a class SerialPortManager with following responsbilities
 
     2. Preference setting :
        Window and Size: Last size and geometry
+       Port Page size
+       Port page state

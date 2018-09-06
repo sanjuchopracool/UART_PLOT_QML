@@ -34,7 +34,8 @@ class SerialPortManager : public QObject
     Q_OBJECT
     Q_PROPERTY(const QStringList& ports READ ports NOTIFY portsChanged)
     Q_PROPERTY(const QString& lastUsedPort READ lastUsedPort)
-    Q_PROPERTY( const PortSetting& portSetting READ portSetting)
+    Q_PROPERTY(const PortSetting& portSetting READ portSetting)
+    Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
 
 public:
     explicit SerialPortManager(QObject *parent = nullptr);
@@ -55,20 +56,30 @@ public:
 
 signals:
     void portsChanged();
+    void connectedChanged();
+    void dataRead(QByteArray data);
+
+public slots:
+    void connectToPort(const QString &inPortName, const PortSetting &inPortSetting = PortSetting());
+    void disconnect();
 
 private slots:
     void checkPorts();
+    void readData();
 
 private:
     const QStringList &ports()const;
     const QString &lastUsedPort() const;
     const PortSetting &portSetting() const;
+    bool connected() const;
 
 private:
     QStringList     m_ports;
     QString         m_last_used_port;
-    QTimer          *m_refresh_device_timer;
+    QTimer          *m_refresh_device_timer = new QTimer(this);
     PortSetting     m_port_setting;
+    QSerialPort*    m_port = new QSerialPort(this);
+    bool            m_connected = false;
 };
 
 #endif // SERIALPORTMANAGER_H

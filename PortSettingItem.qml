@@ -183,6 +183,13 @@ Item {
                 Layout.fillWidth: true
                 id : connectButton
                 text: qsTr("Connect")
+
+                onClicked: {
+                    if(SerialPortManager.connected)
+                        SerialPortManager.disconnect()
+                    else
+                        SerialPortManager.connectToPort(portsCombo.currentText)
+                }
             }
         }
     }
@@ -207,17 +214,27 @@ Item {
             }
         }
     }
+    function enableUI(enabled) {
+        portsCombo.enabled = enabled
+        baudRateCombo.enabled = enabled;
+        dataBitsCombo.enabled = enabled;
+        stopBitsCombo.enabled = enabled;
+        parityCombo.enabled = enabled;
+        flowControlCombo.enabled = enabled;
+        directionCombo.enabled = enabled;
+    }
 
-    Component.onCompleted: {
-        SerialPortManager.portsChanged.connect(setLastUsedPort)
-        var portSetting = SerialPortManager.portSetting
-        setCurrentIndexForComboByText(baudRateCombo, portSetting.baudRate)
-        setCurrentIndexForComboByText(dataBitsCombo, portSetting.dataBits)
-        setCurrentIndexForComboByText(stopBitsCombo, portSetting.stopBits)
-
-        setCurrentIndexForComboByValue(parityCombo, portSetting.parity)
-        setCurrentIndexForComboByValue(flowControlCombo, portSetting.flowControl)
-        setCurrentIndexForComboByValue(directionCombo, portSetting.direction)
+    function onConnectionChanged() {
+        if(SerialPortManager.connected)
+        {
+            enableUI(false)
+            connectButton.text = qsTr("Disconnect")
+        }
+        else
+        {
+            enableUI(true)
+            connectButton.text = qsTr("Connect")
+        }
     }
 
     Component.onDestruction: {
@@ -226,5 +243,20 @@ Item {
 
     Settings {
         property alias extraWidth: mainItem.extraWidth
+    }
+
+    Component.onCompleted: {
+        setLastUsedPort()
+        var portSetting = SerialPortManager.portSetting
+        setCurrentIndexForComboByText(baudRateCombo, portSetting.baudRate)
+        setCurrentIndexForComboByText(dataBitsCombo, portSetting.dataBits)
+        setCurrentIndexForComboByText(stopBitsCombo, portSetting.stopBits)
+
+        setCurrentIndexForComboByValue(parityCombo, portSetting.parity)
+        setCurrentIndexForComboByValue(flowControlCombo, portSetting.flowControl)
+        setCurrentIndexForComboByValue(directionCombo, portSetting.direction)
+
+        SerialPortManager.portsChanged.connect(setLastUsedPort)
+        SerialPortManager.connectedChanged.connect(onConnectionChanged)
     }
 }

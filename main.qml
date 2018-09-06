@@ -4,6 +4,7 @@ import QtQuick.Controls.Material 2.2
 import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
+import com.sanjay.serial 1.0
 
 ApplicationWindow {
     id: appWindow
@@ -16,17 +17,19 @@ ApplicationWindow {
     minimumWidth: setting.implicitWidth
     minimumHeight: setting.implicitHeight
 
-    TextArea {
-        id : outputArea
+    ScrollView {
         anchors.left: portSettingPage.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        readOnly: true
-        selectByMouse: true
-        selectByKeyboard: true
 
-        text: "Hello India"
+        TextArea {
+            anchors.fill: parent
+            id : outputArea
+            readOnly: true
+            selectByMouse: true
+            selectByKeyboard: true
+        }
     }
 
     Pane {
@@ -110,6 +113,10 @@ ApplicationWindow {
         }
     }
 
+    function onDataRead(data) {
+        outputArea.append(data)
+        outputArea.cursorPosition = outputArea.text.length
+    }
 
     Settings {
         property alias x: appWindow.x
@@ -120,5 +127,6 @@ ApplicationWindow {
 
     Component.onCompleted: {
         portSettingButton.checked = portSettingPage.hidden
+        SerialPortManager.dataRead.connect(onDataRead)
     }
 }
