@@ -1,4 +1,4 @@
-QT += quick serialport quickcontrols2
+QT += quick serialport quickcontrols2 widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    SerialPortManager.cpp
+    SerialPortManager.cpp \
+    MainArea.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,4 +36,8 @@ DISTFILES += \
     Observations
 
 HEADERS += \
-    SerialPortManager.h
+    SerialPortManager.h \
+    MainArea.h
+
+FORMS += \
+    MainArea.ui

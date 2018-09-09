@@ -237,10 +237,6 @@ Item {
         }
     }
 
-    Component.onDestruction: {
-        SerialPortManager.portsChanged.connect(setLastUsedPort)
-    }
-
     Settings {
         property alias extraWidth: mainItem.extraWidth
     }

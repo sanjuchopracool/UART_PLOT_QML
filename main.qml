@@ -1,36 +1,22 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Controls.Material 2.2
+import QtQuick.Controls.Universal 2.2
 import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 import com.sanjay.serial 1.0
 
-ApplicationWindow {
+Item {
     id: appWindow
-    visible: true
-    width: 640
-    height: 320
-    title: qsTr("UART PLOT")
+    anchors.fill: parent
 
-    Material.theme: Material.Dark
-    minimumWidth: setting.implicitWidth
-    minimumHeight: setting.implicitHeight
-
-    ScrollView {
-        anchors.left: portSettingPage.right
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-
-        TextArea {
-            anchors.fill: parent
-            id : outputArea
-            readOnly: true
-            selectByMouse: true
-            selectByKeyboard: true
-        }
+    implicitWidth: buttonBar.implicitWidth
+    signal stateChanged(string state)
+    readonly property int settingPageWidth: {
+        portSettingPage.width
     }
+
+    state: portSettingPage.state
 
     Pane {
         id: portSettingPage
@@ -43,6 +29,11 @@ ApplicationWindow {
 
         function toggleState() {
             portSettingPage.state = portSettingPage.state === "show" ? "hide" : "show";
+            appWindow.stateChanged(state)
+        }
+
+        onWidthChanged: {
+            appWindow.stateChanged(state)
         }
 
         states: [
@@ -94,7 +85,6 @@ ApplicationWindow {
         id : buttonBar
 
         height: parent.height
-
         implicitWidth: columnLayout.implicitWidth
         implicitHeight: columnLayout.implicitHeight
 
@@ -113,20 +103,7 @@ ApplicationWindow {
         }
     }
 
-    function onDataRead(data) {
-        outputArea.append(data)
-        outputArea.cursorPosition = outputArea.text.length
-    }
-
-    Settings {
-        property alias x: appWindow.x
-        property alias y: appWindow.y
-        property alias width: appWindow.width
-        property alias height: appWindow.height
-    }
-
     Component.onCompleted: {
         portSettingButton.checked = portSettingPage.hidden
-        SerialPortManager.dataRead.connect(onDataRead)
     }
 }

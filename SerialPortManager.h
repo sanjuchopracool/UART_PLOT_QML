@@ -42,15 +42,6 @@ public:
     ~SerialPortManager();
 
     static void register_serialport_types() {
-        // Third, register the singleton type provider with QML by calling this function in an initialization function.
-        qmlRegisterSingletonType<SerialPortManager>("com.sanjay.serial", 1, 0, "SerialPortManager",
-                                                    [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject  * {
-            Q_UNUSED(engine)
-            Q_UNUSED(scriptEngine)
-
-            SerialPortManager *manager = new SerialPortManager;
-            return manager;
-        });
         qmlRegisterUncreatableType<PortSetting>("com.sanjay.serial", 1, 0, "PortSetting", "can not create PortSetting type object");
     }
 
