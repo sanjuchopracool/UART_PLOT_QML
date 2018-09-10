@@ -23,6 +23,8 @@ protected:
 
 private slots:
     void onStateChanged(const QString& state);
+    void onDataReceived(const QByteArray& inData);
+
 private:
     Ui::MainArea    *ui;
     QWidget         *m_view = nullptr;

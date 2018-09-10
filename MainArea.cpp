@@ -19,6 +19,7 @@ MainArea::MainArea(QWidget *parent) :
 
     m_serial_port_manager = new SerialPortManager(this);
     m_serial_port_manager->loadFromSettings(m_setting);
+    connect(m_serial_port_manager, SIGNAL(dataRead(QByteArray)), this, SLOT(onDataReceived(QByteArray)));
 
     QQuickView *view = new QQuickView();
     view->rootContext()->setContextProperty("SerialPortManager",
@@ -40,7 +41,6 @@ MainArea::MainArea(QWidget *parent) :
 
 MainArea::~MainArea()
 {
-    delete m_serial_port_manager;
     delete ui;
 }
 
@@ -55,6 +55,11 @@ void MainArea::onStateChanged(const QString &state)
     {
         m_view->setFixedWidth(m_item->implicitWidth());
     }
+}
+
+void MainArea::onDataReceived(const QByteArray &inData)
+{
+    ui->plainTextEdit->appendPlainText(inData);
 }
 
 
