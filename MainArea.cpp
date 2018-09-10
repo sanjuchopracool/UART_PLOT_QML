@@ -18,6 +18,8 @@ MainArea::MainArea(QWidget *parent) :
     ui->horizontalLayout->setSpacing(0);
 
     m_serial_port_manager = new SerialPortManager(this);
+    m_serial_port_manager->loadFromSettings(m_setting);
+
     QQuickView *view = new QQuickView();
     view->rootContext()->setContextProperty("SerialPortManager",
                                             m_serial_port_manager);
@@ -59,5 +61,6 @@ void MainArea::onStateChanged(const QString &state)
 void MainArea::closeEvent(QCloseEvent *event)
 {
     m_setting.setValue(sGeometry, geometry());
+    m_serial_port_manager->saveToSettings(m_setting);
     event->accept();
 }

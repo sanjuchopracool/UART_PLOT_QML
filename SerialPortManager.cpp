@@ -1,6 +1,13 @@
 #include "SerialPortManager.h"
 #include <qserialportinfo.h>
 
+namespace
+{
+const QString cSerialPortManager("SerialPortManager");
+const QString cLastUsedPort("Port");
+const QString cConnectionStatus("Connected");
+}
+
 SerialPortManager::SerialPortManager(QObject *parent) : QObject(parent)
 {
     connect(m_refresh_device_timer, SIGNAL(timeout()), this, SLOT(checkPorts()));
@@ -16,14 +23,34 @@ SerialPortManager::~SerialPortManager()
     m_refresh_device_timer->stop();
 }
 
+void SerialPortManager::saveToSettings(QSettings &setting)
+{
+    setting.beginGroup(cSerialPortManager);
+    setting.setValue(cLastUsedPort, m_last_used_port);
+    setting.setValue(cConnectionStatus, m_connected);
+    setting.endGroup();
+}
+
+void SerialPortManager::loadFromSettings(QSettings &setting)
+{
+    setting.beginGroup(cSerialPortManager);
+    m_last_used_port = setting.value(cLastUsedPort).toString();
+    setting.endGroup();
+}
+
 void SerialPortManager::checkPorts()
 {
-    m_ports.clear();
+    QStringList ports;
     for( auto const& info : QSerialPortInfo::availablePorts())
     {
-        m_ports << info.portName();
+        ports << info.portName();
     }
-    portsChanged();
+
+    if(ports != m_ports)
+    {
+        m_ports = ports;
+        portsChanged();
+    }
 }
 
 void SerialPortManager::readData()
@@ -45,10 +72,11 @@ void SerialPortManager::connectToPort(const QString &inPort, const PortSetting &
     m_port->setParity(static_cast<QSerialPort::Parity>(m_port_setting.parity));
     m_port->setFlowControl(static_cast<QSerialPort::FlowControl>(m_port_setting.flowControl));
 
-    if(m_connected != m_port->open(static_cast<QSerialPort::OpenMode>(m_port_setting.direction)))
+    if(m_port->open(static_cast<QSerialPort::OpenMode>(m_port_setting.direction)))
     {
-        m_connected = !m_connected;
+        m_connected = true;
         emit connectedChanged();
+        m_refresh_device_timer->stop();
     }
 }
 
@@ -61,6 +89,7 @@ void SerialPortManager::disconnect()
         {
             m_connected = false;
             emit connectedChanged();
+            m_refresh_device_timer->start();
         }
     }
 }

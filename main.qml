@@ -58,14 +58,6 @@ Item {
             }
         ]
 
-        transitions: [
-            Transition {
-                AnchorAnimation {
-                    duration: 200
-                }
-            }
-        ]
-
         PortSettingItem {
             id: setting
             anchors.fill: parent

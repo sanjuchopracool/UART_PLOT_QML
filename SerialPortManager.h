@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QQmlEngine>
 #include <QtSerialPort>
+#include <QSettings>
 
 QT_FORWARD_DECLARE_CLASS(QJSEngine)
 
@@ -44,6 +45,9 @@ public:
     static void register_serialport_types() {
         qmlRegisterUncreatableType<PortSetting>("com.sanjay.serial", 1, 0, "PortSetting", "can not create PortSetting type object");
     }
+
+    void saveToSettings(QSettings& setting);
+    void loadFromSettings(QSettings &setting);
 
 signals:
     void portsChanged();
