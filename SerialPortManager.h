@@ -68,6 +68,9 @@ private:
     const PortSetting &portSetting() const;
     bool connected() const;
 
+    void tryToConnect();
+    void connectInternal();
+
 private:
     QStringList     m_ports;
     QString         m_last_used_port;

@@ -35,7 +35,11 @@ void SerialPortManager::loadFromSettings(QSettings &setting)
 {
     setting.beginGroup(cSerialPortManager);
     m_last_used_port = setting.value(cLastUsedPort).toString();
+    m_connected = setting.value(cConnectionStatus).toBool();
     setting.endGroup();
+
+    if(m_connected)
+        tryToConnect();
 }
 
 void SerialPortManager::checkPorts()
@@ -63,21 +67,7 @@ void SerialPortManager::connectToPort(const QString &inPort, const PortSetting &
     m_last_used_port = inPort;
     m_port_setting = inPortSetting;
 
-    m_port->close();
-
-    m_port->setPortName(m_last_used_port);
-    m_port->setBaudRate(m_port_setting.baudRate);
-    m_port->setDataBits(static_cast<QSerialPort::DataBits>(m_port_setting.dataBits));
-    m_port->setStopBits(static_cast<QSerialPort::StopBits>(m_port_setting.stopBits));
-    m_port->setParity(static_cast<QSerialPort::Parity>(m_port_setting.parity));
-    m_port->setFlowControl(static_cast<QSerialPort::FlowControl>(m_port_setting.flowControl));
-
-    if(m_port->open(static_cast<QSerialPort::OpenMode>(m_port_setting.direction)))
-    {
-        m_connected = true;
-        emit connectedChanged();
-        m_refresh_device_timer->stop();
-    }
+    connectInternal();
 }
 
 void SerialPortManager::disconnect()
@@ -112,4 +102,37 @@ const PortSetting &SerialPortManager::portSetting() const
 bool SerialPortManager::connected() const
 {
     return m_connected;
+}
+
+void SerialPortManager::tryToConnect()
+{
+    if(m_last_used_port.size())
+    {
+        if(m_ports.contains(m_last_used_port))
+        {
+            connectInternal();
+        }
+    }
+}
+
+void SerialPortManager::connectInternal()
+{
+    m_port->close();
+    m_port->setPortName(m_last_used_port);
+    m_port->setBaudRate(m_port_setting.baudRate);
+    m_port->setDataBits(static_cast<QSerialPort::DataBits>(m_port_setting.dataBits));
+    m_port->setStopBits(static_cast<QSerialPort::StopBits>(m_port_setting.stopBits));
+    m_port->setParity(static_cast<QSerialPort::Parity>(m_port_setting.parity));
+    m_port->setFlowControl(static_cast<QSerialPort::FlowControl>(m_port_setting.flowControl));
+
+    if(m_port->open(static_cast<QSerialPort::OpenMode>(m_port_setting.direction)))
+    {
+        m_connected = true;
+        emit connectedChanged();
+        m_refresh_device_timer->stop();
+    }
+    else
+    {
+        m_connected = false;
+    }
 }

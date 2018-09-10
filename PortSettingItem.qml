@@ -243,6 +243,7 @@ Item {
 
     Component.onCompleted: {
         setLastUsedPort()
+        onConnectionChanged()
         var portSetting = SerialPortManager.portSetting
         setCurrentIndexForComboByText(baudRateCombo, portSetting.baudRate)
         setCurrentIndexForComboByText(dataBitsCombo, portSetting.dataBits)
