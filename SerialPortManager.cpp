@@ -38,11 +38,16 @@ void SerialPortManager::loadFromSettings(QSettings &setting)
 {
     setting.beginGroup(cSerialPortManager);
     m_last_used_port = setting.value(cLastUsedPort).toString();
-    m_connected = setting.value(cConnectionStatus).toBool();
+    bool wasConnected = setting.value(cConnectionStatus).toBool();
     setting.endGroup();
 
-    if(m_connected)
+    if(wasConnected)
+    {
         tryToConnect();
+
+        if (!m_connected)
+            m_autoConnect = true;
+    }
 }
 
 void SerialPortManager::checkPortsAndConnect()
