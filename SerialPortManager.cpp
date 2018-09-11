@@ -10,17 +10,20 @@ const QString cConnectionStatus("Connected");
 
 SerialPortManager::SerialPortManager(QObject *parent) : QObject(parent)
 {
-    connect(m_refresh_device_timer, SIGNAL(timeout()), this, SLOT(checkPorts()));
+    connect(m_refresh_device_timer, SIGNAL(timeout()), this, SLOT(checkPortsAndConnect()));
     connect(m_port, &QSerialPort::readyRead, this, &SerialPortManager::readData);
+    connect(m_port, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(onErrorOccurred(QSerialPort::SerialPortError)));
 
-    checkPorts();
+    checkPortsAndConnect();
     m_refresh_device_timer->start(1000);
 }
 
 SerialPortManager::~SerialPortManager()
 {
-    m_port->close();
     m_refresh_device_timer->stop();
+
+    if(m_port->isOpen())
+        m_port->close();
 }
 
 void SerialPortManager::saveToSettings(QSettings &setting)
@@ -42,7 +45,7 @@ void SerialPortManager::loadFromSettings(QSettings &setting)
         tryToConnect();
 }
 
-void SerialPortManager::checkPorts()
+void SerialPortManager::checkPortsAndConnect()
 {
     QStringList ports;
     for( auto const& info : QSerialPortInfo::availablePorts())
@@ -55,11 +58,26 @@ void SerialPortManager::checkPorts()
         m_ports = ports;
         portsChanged();
     }
+
+    if(m_autoConnect)
+        tryToConnect();
 }
 
 void SerialPortManager::readData()
 {
     emit dataRead(m_port->readAll());
+}
+
+void SerialPortManager::onErrorOccurred(QSerialPort::SerialPortError error)
+{
+    switch (error) {
+    case QSerialPort::ResourceError:
+        disconnect();
+        m_autoConnect = true;
+        break;
+    default:
+        break;
+    }
 }
 
 void SerialPortManager::connectToPort(const QString &inPort, const PortSetting &inPortSetting)
@@ -117,7 +135,9 @@ void SerialPortManager::tryToConnect()
 
 void SerialPortManager::connectInternal()
 {
-    m_port->close();
+    if(m_port->isOpen())
+        m_port->close();
+
     m_port->setPortName(m_last_used_port);
     m_port->setBaudRate(m_port_setting.baudRate);
     m_port->setDataBits(static_cast<QSerialPort::DataBits>(m_port_setting.dataBits));
@@ -130,6 +150,7 @@ void SerialPortManager::connectInternal()
         m_connected = true;
         emit connectedChanged();
         m_refresh_device_timer->stop();
+        m_autoConnect = false;
     }
     else
     {

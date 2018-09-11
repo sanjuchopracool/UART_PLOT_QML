@@ -59,8 +59,9 @@ public slots:
     void disconnect();
 
 private slots:
-    void checkPorts();
+    void checkPortsAndConnect();
     void readData();
+    void onErrorOccurred(QSerialPort::SerialPortError error);
 
 private:
     const QStringList &ports()const;
@@ -78,6 +79,7 @@ private:
     PortSetting     m_port_setting;
     QSerialPort*    m_port = new QSerialPort(this);
     bool            m_connected = false;
+    bool            m_autoConnect = false;
 };
 
 #endif // SERIALPORTMANAGER_H

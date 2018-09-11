@@ -2,6 +2,7 @@
 #include "ui_MainArea.h"
 #include <QQuickView>
 #include <QQmlContext>
+#include <QScrollBar>
 
 namespace
 {
@@ -16,6 +17,7 @@ MainArea::MainArea(QWidget *parent) :
     ui->setupUi(this);
     ui->horizontalLayout->setMargin(0);
     ui->horizontalLayout->setSpacing(0);
+    ui->plainTextEdit->setReadOnly(true);
 
     m_serial_port_manager = new SerialPortManager(this);
     m_serial_port_manager->loadFromSettings(m_setting);
@@ -59,7 +61,8 @@ void MainArea::onStateChanged(const QString &state)
 
 void MainArea::onDataReceived(const QByteArray &inData)
 {
-    ui->plainTextEdit->appendPlainText(inData);
+    ui->plainTextEdit->moveCursor(QTextCursor::End);
+    ui->plainTextEdit->insertPlainText(inData);
 }
 
 
