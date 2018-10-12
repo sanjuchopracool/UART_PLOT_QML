@@ -117,9 +117,14 @@ const QString &SerialPortManager::lastUsedPort() const
     return  m_last_used_port;
 }
 
-const PortSetting &SerialPortManager::portSetting() const
+PortSetting SerialPortManager::portSetting() const
 {
     return  m_port_setting;
+}
+
+void SerialPortManager::setPortSetting(const PortSetting &inSetting)
+{
+    m_port_setting = inSetting;
 }
 
 bool SerialPortManager::connected() const

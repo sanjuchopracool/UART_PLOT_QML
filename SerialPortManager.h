@@ -35,7 +35,7 @@ class SerialPortManager : public QObject
     Q_OBJECT
     Q_PROPERTY(const QStringList& ports READ ports NOTIFY portsChanged)
     Q_PROPERTY(const QString& lastUsedPort READ lastUsedPort)
-    Q_PROPERTY(const PortSetting& portSetting READ portSetting)
+    Q_PROPERTY(PortSetting portSetting READ portSetting WRITE setPortSetting)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
 
 public:
@@ -66,7 +66,8 @@ private slots:
 private:
     const QStringList &ports()const;
     const QString &lastUsedPort() const;
-    const PortSetting &portSetting() const;
+    PortSetting portSetting() const;
+    void setPortSetting(const PortSetting& inSetting);
     bool connected() const;
 
     void tryToConnect();

@@ -188,7 +188,18 @@ Item {
                     if(SerialPortManager.connected)
                         SerialPortManager.disconnect()
                     else
-                        SerialPortManager.connectToPort(portsCombo.currentText)
+                    {
+                        var newSetting = SerialPortManager.portSetting
+                        newSetting.baudRate = baudRateCombo.model[baudRateCombo.currentIndex]
+                        newSetting.dataBits = dataBitsCombo.model[dataBitsCombo.currentIndex]
+                        newSetting.stopBits = stopBitsCombo.model[stopBitsCombo.currentIndex]
+
+                        newSetting.parity = parityCombo.model.get(parityCombo.currentIndex).value
+                        newSetting.flowControl = flowControlCombo.model.get(flowControlCombo.currentIndex).value
+                        newSetting.direction = directionCombo.model.get(directionCombo.currentIndex).value
+
+                        SerialPortManager.connectToPort(portsCombo.currentText, newSetting)
+                    }
                 }
             }
         }
