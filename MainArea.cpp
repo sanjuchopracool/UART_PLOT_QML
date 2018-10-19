@@ -3,6 +3,7 @@
 #include <QQuickView>
 #include <QQmlContext>
 #include <QScrollBar>
+#include <QDesktopWidget>
 
 namespace
 {
@@ -38,7 +39,10 @@ MainArea::MainArea(QWidget *parent) :
 
     setMinimumHeight(300);
     setWindowTitle("UART PLOT");
-    setGeometry(m_setting.value(sGeometry).toRect());
+
+    QRect defaultGeometry(0,0, 700, 400);
+    defaultGeometry.moveCenter(QDesktopWidget().screenGeometry().center());
+    setGeometry(m_setting.value(sGeometry, defaultGeometry).toRect());
 }
 
 MainArea::~MainArea()

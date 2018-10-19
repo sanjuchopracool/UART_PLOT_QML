@@ -6,6 +6,13 @@ namespace
 const QString cSerialPortManager("SerialPortManager");
 const QString cLastUsedPort("Port");
 const QString cConnectionStatus("Connected");
+
+const QString cBaudRate("BaudRate");
+const QString cDataBits("DataBits");
+const QString cStopBits("StopBits");
+const QString cParity("Parity");
+const QString cFlowControl("FlowControl");
+const QString cDirection("Direction");
 }
 
 SerialPortManager::SerialPortManager(QObject *parent) : QObject(parent)
@@ -31,6 +38,7 @@ void SerialPortManager::saveToSettings(QSettings &setting)
     setting.beginGroup(cSerialPortManager);
     setting.setValue(cLastUsedPort, m_last_used_port);
     setting.setValue(cConnectionStatus, m_connected);
+    m_port_setting.saveToSettings(setting);
     setting.endGroup();
 }
 
@@ -39,6 +47,7 @@ void SerialPortManager::loadFromSettings(QSettings &setting)
     setting.beginGroup(cSerialPortManager);
     m_last_used_port = setting.value(cLastUsedPort).toString();
     bool wasConnected = setting.value(cConnectionStatus).toBool();
+    m_port_setting.loadFromSettings(setting);
     setting.endGroup();
 
     if(wasConnected)
@@ -166,4 +175,28 @@ void SerialPortManager::connectInternal()
     {
         m_connected = false;
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// PortSetting
+///////////////////////////////////////////////////////////////////////////////
+
+void PortSetting::saveToSettings(QSettings &setting)
+{
+    setting.setValue(cBaudRate, baudRate);
+    setting.setValue(cDataBits, dataBits);
+    setting.setValue(cStopBits, stopBits);
+    setting.setValue(cParity, parity);
+    setting.setValue(cFlowControl, flowControl);
+    setting.setValue(cDirection, direction);
+}
+
+void PortSetting::loadFromSettings(QSettings &setting)
+{
+    baudRate = setting.value(cBaudRate, baudRate).toInt();
+    dataBits = setting.value(cDataBits, dataBits).toInt();
+    stopBits = setting.value(cStopBits, stopBits).toInt();
+    parity = setting.value(cParity, parity).toInt();
+    flowControl = setting.value(cFlowControl, flowControl).toInt();
+    direction = setting.value(cDirection, direction).toInt();
 }

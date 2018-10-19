@@ -26,6 +26,9 @@ public:
     int parity = QSerialPort::NoParity;
     int flowControl = QSerialPort::NoFlowControl;
     int direction = QSerialPort::Input | QSerialPort::Output;
+
+    void saveToSettings(QSettings &setting);
+    void loadFromSettings(QSettings &setting);
 };
 
 Q_DECLARE_METATYPE(PortSetting)
