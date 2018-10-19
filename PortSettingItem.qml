@@ -58,6 +58,10 @@ Item {
             model: SerialPortManager.ports
             Layout.fillWidth: true
             Layout.columnSpan: 3
+
+            onCountChanged: {
+                connectButton.enabled = count
+            }
         }
 
         ///////////////////  Baud Rate ///////////////////
@@ -183,6 +187,7 @@ Item {
                 Layout.fillWidth: true
                 id : connectButton
                 text: qsTr("Connect")
+                enabled: false
 
                 onClicked: {
                     if(SerialPortManager.connected)

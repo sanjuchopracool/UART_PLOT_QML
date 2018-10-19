@@ -61,7 +61,7 @@ void SerialPortManager::checkPortsAndConnect()
     if(ports != m_ports)
     {
         m_ports = ports;
-        portsChanged();
+        emit portsChanged();
     }
 
     if(m_autoConnect)
