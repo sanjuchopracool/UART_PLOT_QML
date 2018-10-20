@@ -43,6 +43,13 @@ MainArea::MainArea(QWidget *parent) :
     QRect defaultGeometry(0,0, 700, 400);
     defaultGeometry.moveCenter(QDesktopWidget().screenGeometry().center());
     setGeometry(m_setting.value(sGeometry, defaultGeometry).toRect());
+
+    onConnectionChanged();
+
+    // Connections
+    connect(m_serial_port_manager,SIGNAL(connectedChanged()),
+            this, SLOT(onConnectionChanged()));
+    ui->lineEdit->setPlaceholderText(tr("Send data here!!"));
 }
 
 MainArea::~MainArea()
@@ -75,4 +82,22 @@ void MainArea::closeEvent(QCloseEvent *event)
     m_setting.setValue(sGeometry, geometry());
     m_serial_port_manager->saveToSettings(m_setting);
     event->accept();
+}
+
+void MainArea::on_lineEdit_returnPressed()
+{
+    m_serial_port_manager->sendData(ui->lineEdit->text().toLatin1());
+    ui->lineEdit->clear();
+}
+
+void MainArea::onConnectionChanged()
+{
+    bool visible = false;
+    if(m_serial_port_manager->connected())
+    {
+        if(m_serial_port_manager->portSetting().direction & QSerialPort::WriteOnly)
+            visible = true;
+    }
+
+    ui->lineEdit->setVisible(visible);
 }

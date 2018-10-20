@@ -25,6 +25,9 @@ private slots:
     void onStateChanged(const QString& state);
     void onDataReceived(const QByteArray& inData);
 
+    void on_lineEdit_returnPressed();
+    void onConnectionChanged();
+
 private:
     Ui::MainArea    *ui;
     QWidget         *m_view = nullptr;

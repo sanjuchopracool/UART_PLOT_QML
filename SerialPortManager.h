@@ -52,6 +52,10 @@ public:
     void saveToSettings(QSettings& setting);
     void loadFromSettings(QSettings &setting);
 
+    bool connected() const;
+    PortSetting portSetting() const;
+    void sendData(const QByteArray& inData);
+
 signals:
     void portsChanged();
     void connectedChanged();
@@ -69,9 +73,7 @@ private slots:
 private:
     const QStringList &ports()const;
     const QString &lastUsedPort() const;
-    PortSetting portSetting() const;
     void setPortSetting(const PortSetting& inSetting);
-    bool connected() const;
 
     void tryToConnect();
     void connectInternal();

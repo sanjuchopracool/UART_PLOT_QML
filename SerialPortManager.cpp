@@ -131,6 +131,14 @@ PortSetting SerialPortManager::portSetting() const
     return  m_port_setting;
 }
 
+void SerialPortManager::sendData(const QByteArray &inData)
+{
+    if(m_port->isOpen())
+    {
+        m_port->write(inData);
+    }
+}
+
 void SerialPortManager::setPortSetting(const PortSetting &inSetting)
 {
     m_port_setting = inSetting;
